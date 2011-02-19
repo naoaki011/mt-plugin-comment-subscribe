@@ -11,7 +11,7 @@ Allows a commenter to subscribe to future comments on an entry.
 
 ## Requirements
 
-* MT 4.x
+* MT 4.x &amp; 5.0 or Later (include 5.1)
 
 ## Features
 
