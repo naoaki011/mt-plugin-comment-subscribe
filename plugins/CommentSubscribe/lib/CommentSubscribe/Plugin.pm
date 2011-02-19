@@ -66,7 +66,7 @@ sub process_new_comment {
         # Changed to use translate method for L10N
         my $subject =
           $plugin->translate( "([_1]) [_2] posted a new comment on '[_3]'",
-            $blog->name, $obj->author, $entry->title );
+            $blog->name, Encode::is_utf8($obj->author) ? $obj->author : Encode::decode_utf8($obj->author), $entry->title );
 
         require MT::Mail;
         foreach my $addy (@addresses) {
@@ -85,8 +85,8 @@ sub process_new_comment {
             my $param = {
                 entry_title     => $entry->title,
                 entry_permalink => $entry->permalink,
-                comment_author  => $obj->author,
-                comment_text    => $obj->text,
+                comment_author  => Encode::is_utf8($obj->author) ? $obj->author : Encode::decode_utf8($obj->author),
+                comment_text    => Encode::is_utf8($obj->text) ? $obj->text : Encode::decode_utf8($obj->text),
                 unsub_link      => $app->base
                   . $app->uri
                   . "?__mode=unsub&key="
