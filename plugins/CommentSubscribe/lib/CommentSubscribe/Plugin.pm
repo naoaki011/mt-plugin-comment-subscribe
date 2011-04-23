@@ -2,6 +2,7 @@ package CommentSubscribe::Plugin;
 
 use strict;
 use String::Random qw( random_string );
+use CommentSubscribe::Util qw( send_notifications ); 
 
 sub process_new_comment {
     my ( $cb, $obj, $original ) = @_;
@@ -12,7 +13,7 @@ sub process_new_comment {
     # Check for spam content first! This way, the CommentSubscribe
     # table isn't flooded with spam email addresses.
 
-    if ( $obj->visible || $obj->junk_status == 1 ) {
+    if ( $obj->visible && $obj->is_not_junk ) {
 
         my $app = MT->instance()
           ;    # Store the instance in a variable, we need it more often
@@ -23,7 +24,8 @@ sub process_new_comment {
 
         if ( $app->param('subscribe') && $email ) {
 
-# don't bother if the user hasn't left an email address or if the comment is not yet visible
+            # don't bother if the user hasn't left an email address 
+            # or if the comment is not yet visible
             if (
                 !MT->model('commentsubscriptions')->load(
                     {
@@ -44,84 +46,23 @@ sub process_new_comment {
             }
         }
 
-        # Get entry details
-        my $entry = MT->model('entry')->load(
-            {
-                'blog_id' => $blog_id,
-                'id'      => $entry_id
-            }
-        );
-
-        my $from_email = $entry->author()->email;
-        my $blog       = $entry->blog;
-
-        # Send email
-        my @addresses = MT->model('commentsubscriptions')->load(
-            {
-                'blog_id'  => $blog_id,
-                'entry_id' => $entry_id
-            }
-        );
-
-        # Changed to use translate method for L10N
-        my $subject =
-          $plugin->translate( "([_1]) [_2] posted a new comment on '[_3]'",
-            $blog->name, $obj->author, $entry->title );
-
-        require MT::Mail;
-        foreach my $addy (@addresses) {
-            my %head = (
-                To      => $addy->email,
-                Subject => $subject,
-
-                # Added a from of either the system email or commenter email
-                # (previously it would use root server email)
-                From =>
-                  $from_email  #$app->config('EmailAddressMain') || $addy->email
-            );
-
-            # Here we build the email from a template rather than raw text. 
-            # More powerful, easier to edit, L10N
-            my $param = {
-                entry_title     => $entry->title,
-                entry_permalink => $entry->permalink,
-                comment_author  => $obj->author,
-                comment_text    => $obj->text,
-                unsub_link      => $app->base
-                  . $app->uri
-                  . "?__mode=unsub&key="
-                  . $addy->uniqkey
-            };
-
-            # load_tmpl loads it from the plugin's tmpl directory
-            my $body =
-              $app->build_page(
-                $plugin->load_tmpl('commentsubscribe_notify.tmpl'), $param );
-
-            if ( $addy->email ne $email ) {    # Don't sent to the commenter
-                if ( MT->config->DebugMode > 0 ) {
-                    MT->log(
-                        {
-                            blog_id => $blog->id,
-                            message => "Sending comment notification to: "
-                              . $head{'To'}
-                        }
-                    );
-                }
-                MT::Mail->send( \%head, $body );
-            } else {
-                if ( MT->config->DebugMode > 0 ) {
-                    MT->log(
-                        {
-                            blog_id => $blog->id,
-                            message => "NOT sending comment notification to: "
-                              . $head{'To'} . " because subscriber is the same as the commenter."
-                        }
-                    );
-                }
-            }
+        my $use_queue = $plugin->get_config_value('use_queue');
+        if ( $use_queue ) {
+            require MT::TheSchwartz;
+            require TheSchwartz::Job;
+            my $job = TheSchwartz::Job->new();
+            $job->funcname('CommentSubscribe::EmailWorker');
+            $job->uniqkey( $obj->id );
+            my $priority = 5;
+            $job->priority( $priority );
+            $job->coalesce( ( $obj->blog_id || 0 ) .':'.$$.':'.$priority.':'.( time - ( time % 10 ) ) );
+            $job->arg( $app->base . $app->uri );
+            MT::TheSchwartz->insert($job);
+        } else {
+            send_notifications( $obj, $app->base . $app->uri );
         }
-    }
+
+    } # end if ( $obj->visible && $obj->is_not_junk ) 
 }
 
 sub unsub {
@@ -158,5 +99,38 @@ sub unsub {
 
     return "I'm afraid I don't understand that.";
 }
+
+#sub load_tasks {
+#    my $cfg = MT->config;
+#    return {
+#        'SendCommentSubscribeNotifications' => {
+#            'label'     => 'Send Comment Notifications',
+#            'frequency' => 5 * 60, # 5 minutes
+#            'code'      => sub {
+#                CommentSubscribe::Plugin->task_send;
+#            },
+#        }
+#    };
+#}
+#
+#sub task_send {
+#    my $this = shift;
+#    require MT::Util;
+#    my $app           = MT->instance;
+#    my $total_changed = 0;
+#    my @blogs         = MT->model('blog')->load(
+#        undef,
+#        {
+#            join => MT->model('entry')->join_on(
+#                'blog_id',
+#                {
+#                    status    => MT::Entry::RELEASE(),
+#                    expire_on => { not_null => 1 },
+#                },
+#                { unique => 1 }
+#            )
+#        }
+#    );
+#}
 
 1;
