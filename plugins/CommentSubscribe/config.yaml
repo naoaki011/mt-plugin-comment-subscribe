@@ -2,15 +2,22 @@ id: 'CommentSubscribe'
 key: 'comment-subscribe'
 name: 'Comment Subscribe'
 description: "Allows viewers to subscribe to recieve emails every time a comment is posted for a given entry."
-version: 1.5
-schema_version: 2
+version: 1.5.1
+schema_version: 5
 author_name : "Robert Synnott, Byrne Reese"
+l10n_class: CommentSubscribe::L10N
 
 object_types:
   commentsubscriptions: 'CommentSubscribe::CommentSubscriptions'
 
 callbacks:
   MT::Comment::post_save: $CommentSubscribe::CommentSubscribe::Plugin::process_new_comment
+
+default_templates:
+  base_path: templates
+  global:email:
+    commentsubscribe_notify: 
+      label: 'Comment Notification to Subscribers'
 
 options:
   fieldsets:
@@ -21,6 +28,19 @@ options:
     type: checkbox
     fieldset: general
     default: 0
+    scope: system 
+  from_header:
+    label: 'Send emails from?'
+    type: text
+    hint: 'The email address comment notification emails will be sent from. Leave this field blank if you wish comment notification emails to be sent from the author of the entry.'
+    fieldset: general
+    scope: system 
+  subject_header:
+    label: 'Email Subject'
+    type: text
+    default: '(%BLOG%) %COMMENTER% posted a new comment on "%TITLE%"'
+    hint: 'The subject of the email that will be sent.<br>%BLOG% = Blog Name<br>%COMMENTER% = Commenter Name<br>%TITLE% = Blog post title'
+    fieldset: general
     scope: system 
 
 task_workers:
