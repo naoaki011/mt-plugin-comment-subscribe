@@ -49,9 +49,10 @@ sub send_notifications {
     require MT::Mail;
     foreach my $addy (@addresses) {
         my %head = (
-            To      => $addy->email,
-            Subject => $subject,
-            From    => $from_email,
+            To          => $addy->email,
+            Subject     => $subject,
+            From        => $from_email,
+            Return-Path => $from_email,
             );
         
         # Here we build the email from a template rather than raw text. 
