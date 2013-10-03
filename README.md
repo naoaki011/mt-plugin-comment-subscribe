@@ -34,10 +34,6 @@ This plugin provides the ability for commenters on a blog to subscribe to notifi
 * Send emails via a background task to speed up comment process (requires 
   run-periodic-tasks)
 
-## Requirements
-
-* MT 4.x or Melody 1.x
-
 ## Documentation ##
 
 ### Setup ###
