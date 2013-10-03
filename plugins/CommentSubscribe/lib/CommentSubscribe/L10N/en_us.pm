@@ -7,3 +7,4 @@ use vars qw( %Lexicon );
 %Lexicon = ();
 
 1;
+
