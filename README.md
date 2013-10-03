@@ -1,10 +1,10 @@
-# Comment Subscribe, a plugin for Melody/Movable Type #
+# Comment Subscribe, a plugin for Movable Type #
 
 * **Authors:** Robert Synnott. [Now being maintained by Byrne Reese and others on GitHub][GitHub].
 * **License:** [Artistic License 2.0](http://www.opensource.org/licenses/artistic-license-2.0.php)
 * **Site:** <http://plugins.movabletype.org/comment-subscribe/>
 
-[GitHub]: http://github.com/endevver/mt-plugin-comment-subscribe
+[GitHub]: http://github.com/naoaki011/mt-plugin-comment-subscribe
 [Artistic License 2.0]: 
    http://www.opensource.org/licenses/artistic-license-2.0.php
 
@@ -14,14 +14,9 @@ This plugin provides the ability for commenters on a blog to subscribe to notifi
 
 ## Requirements ##
 
-* Any version of [Melody][] or [Movable Type v4.3x][MT]
+* MT 4.0 or Later
 
-<<<<<<< HEAD
-* MT 4.x &amp; 5.0 or Later (include 5.1)
-=======
 [MT]:       http://movabletype.org/
-[Melody]:   http://openmelody.org/
->>>>>>> 8f82eda1124e5b1fa9b0b1fb805eb4806f095f47
 
 ## Features ##
 
