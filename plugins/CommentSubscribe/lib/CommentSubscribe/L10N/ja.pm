@@ -13,8 +13,20 @@ use vars qw( %Lexicon );
     'If you no longer wish to receive notifications, please click here' => 'コメントの通知メールの送信を止めたい場合は、次のアドレスをクリックしてください。',
     'If you no longer wish to receive notifications of new comments, please click or cut and paste the following URL into a web browser'
       => '新規コメントの通知メール送信を止めたい場合は、次のURLをクリックするかブラウザーに貼り付けてください。',
-    'You have successfully unsubscribed from future comment notifications from [_1].' => '[_1]に対する、以後のコメントのメール通知が、正常に解除されました。',
+    'You have successfully unsubscribed from future comment notifications of [_1].' => '[_1]に対する、以後のコメントのメール通知が、正常に解除されました。',
     'Unsubscribed' => '通知が解除されました。',
+    'Comment Notification to Subscribers' => '購読者へのコメント通知',
+    '(%BLOG%) %COMMENTER% posted a new comment on "%TITLE%"'
+      => '[%BLOG%] '%TITLE%' に %COMMENTER% がコメントしました',
+    'Send email notifications for new comments.' => '新規コメントへの通知メールを送ります。',
+    'Populating unique keys...' => '一意のキーを登録中...',
+    'Send notifications via background task?' => 'キュー経由で送信',
+    'Send emails from?' => '送信元アドレス',
+    'Email Subject' => '送信メール件名',
+    'The email address comment notification emails will be sent from. Leave this field blank if you wish comment notification emails to be sent from the author of the entry.'
+      => 'コメント通知メールの送信元アドレスとして指定します。 空白の場合は、コメント先記事の投稿者のメールアドレスが利用されます。',
+    'The subject of the email that will be sent.<br>%BLOG% = Blog Name<br>%COMMENTER% = Commenter Name<br>%TITLE% = Blog post title'
+      => '送信されるメール件名を設定します。<br>%BLOG% = ブログ名<br>%COMMENTER% = コメント投稿者名<br>%TITLE% = 記事タイトル',
 );
 
 1;

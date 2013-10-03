@@ -9,14 +9,15 @@ our @EXPORT_OK = qw( send_notifications );
 
 sub send_notifications {
     my ($obj,$base) = @_;
+    
+    my $app = MT::App::Comments->instance;
+    my $cfg = MT::ConfigMgr->instance;
+    my $script_path = $app->base . $cfg->CGIPath . $cfg->CommentScript;
 
-#    my $app      = MT::App::Comments->instance;
-#    $app->mode('comment_subscribe_worker');
     my $plugin   = MT->component('CommentSubscribe');
     my $blog_id  = $obj->blog_id;
     my $entry_id = $obj->entry_id;
     my $email    = $obj->email;
-#    $base        ||= $app->base;
 
     # Get entry details
     my $entry = MT->model('entry')->load({
@@ -40,11 +41,8 @@ sub send_notifications {
     
     my $subject = trim( $plugin->get_config_value('subject_header') );
     $subject =~ s/%BLOG%/$blog->name/e;
-    $subject =~ s/%COMMENTER%/$obj->author/e;
+    $subject =~ s/%COMMENTER%/Encode::is_utf8($obj->author) ? $obj->author : Encode::decode_utf8($obj->author)/e;
     $subject =~ s/%TITLE%/$entry->title/e;
-
-    #$plugin->translate( "([_1]) [_2] posted a new comment on '[_3]'",
-    #                    $blog->name, $obj->author, $entry->title );
     
     require MT::Mail;
     foreach my $addy (@addresses) {
@@ -62,9 +60,9 @@ sub send_notifications {
             entry_author       => $entry->author->name,
             entry_author_email => $entry->author->email,
             entry_permalink    => $entry->permalink,
-            comment_author     => $obj->author,
-            comment_text       => $obj->text,
-            unsub_link         => $base
+            comment_author     => Encode::is_utf8($obj->author) ? $obj->author : Encode::decode_utf8($obj->author),
+            comment_text       => Encode::is_utf8($obj->text) ? $obj->text : Encode::decode_utf8($obj->text),
+            unsub_link         => $script_path
                 . "?__mode=unsub&key="
                 . $addy->uniqkey
         };

@@ -1,8 +1,8 @@
-<mt:setvar name="page_title" value="<__trans phrase="Unsubscribed">">
+<__trans_section component="CommentSubscribe"><mt:setvar name="page_title" value="<__trans phrase="Unsubscribed">">
 <mt:include name="include/chromeless_header.tmpl">
 
 <div id="unsubscribed">
-  <p><__trans phrase="You have successfully unsubscribed from future comment notifications from [_1]." params="<a href="<$mt:var name="entry_url"$>"><$mt:var name="entry_title"$></a>"></p>
+  <p><__trans phrase="You have successfully unsubscribed from future comment notifications of [_1]." params="<a href="<$mt:var name="entry_url" escape="html"$>"><$mt:var name="entry_title" escape="html"$></a>"></p>
 </div>
 
-<mt:include name="include/chromeless_footer.tmpl">
+<mt:include name="include/chromeless_footer.tmpl"></__trans_section>

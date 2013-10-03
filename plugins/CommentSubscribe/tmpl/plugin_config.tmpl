@@ -1,0 +1,17 @@
+<mtapp:setting
+  id="use_queue"
+  label="<__trans phrase="Send notifications via background task?">">
+    <label for="use_queue"><input type="checkbox" name="use_queue"<mt:if name="use_queue"> checked="checked"</mt:if> value="1" /></label>
+</mtapp:setting>
+<mtapp:setting
+  id="from_header"
+  label="<__trans phrase="Send emails from?">">
+    <input type="text" name="from_header" value="<mt:var name="from_header" escape="html">" />
+  <p class="hint"><__trans phrase='The email address comment notification emails will be sent from. Leave this field blank if you wish comment notification emails to be sent from the author of the entry.'></p>
+</mtapp:setting>
+<mtapp:setting
+  id="subject_header"
+  label="<__trans phrase="Email Subject">">
+    <input type="text" name="subject_header" value="<mt:var name="subject_header" escape="html">" />
+  <p class="hint"><__trans phrase='The subject of the email that will be sent.<br>%BLOG% = Blog Name<br>%COMMENTER% = Commenter Name<br>%TITLE% = Blog post title'></p>
+</mtapp:setting>
