@@ -5,7 +5,6 @@ use base 'CommentSubscribe::L10N::en_us';
 use vars qw( %Lexicon );
 
 %Lexicon = (
-
     'Allows viewers to subscribe to recieve emails every time a comment is posted for a given entry.'
       => 'エントリーにコメントが投稿されたときに、そのコメントをメールで受信できるようにします。',
     "([_1]) [_2] posted a new comment on '[_3]'" => "([_1]) [_2] さんからブログ記事「[_3]」にコメントがありました。",
@@ -16,8 +15,6 @@ use vars qw( %Lexicon );
     'You have successfully unsubscribed from future comment notifications of [_1].' => '[_1]に対する、以後のコメントのメール通知が、正常に解除されました。',
     'Unsubscribed' => '通知が解除されました。',
     'Comment Notification to Subscribers' => '購読者へのコメント通知',
-    '(%BLOG%) %COMMENTER% posted a new comment on "%TITLE%"'
-      => '[%BLOG%] '%TITLE%' に %COMMENTER% がコメントしました',
     'Send email notifications for new comments.' => '新規コメントへの通知メールを送ります。',
     'Populating unique keys...' => '一意のキーを登録中...',
     'Send notifications via background task?' => 'キュー経由で送信',
