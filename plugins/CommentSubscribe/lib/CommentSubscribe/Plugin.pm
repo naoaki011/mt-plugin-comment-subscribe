@@ -13,7 +13,7 @@ sub process_new_comment {
     # Check for spam content first! This way, the CommentSubscribe
     # table isn't flooded with spam email addresses.
 
-    if ( $obj->visible && $obj->is_not_junk ) {
+    if ( $obj->is_not_junk ) {
 
         my $app = MT->instance()
           ;    # Store the instance in a variable, we need it more often
@@ -46,23 +46,24 @@ sub process_new_comment {
             }
         }
 
-        my $use_queue = $plugin->get_config_value('use_queue');
-        if ( $use_queue ) {
-            require MT::TheSchwartz;
-            require TheSchwartz::Job;
-            my $job = TheSchwartz::Job->new();
-            $job->funcname('CommentSubscribe::EmailWorker');
-            $job->uniqkey( $obj->id );
-            my $priority = 5;
-            $job->priority( $priority );
-            $job->coalesce( ( $obj->blog_id || 0 ) .':'.$$.':'.$priority.':'.( time - ( time % 10 ) ) );
-            $job->arg( $app->base . $app->uri );
-            MT::TheSchwartz->insert($job);
-        } else {
-            send_notifications( $obj, $app->base . $app->uri );
+        if ( $obj->visible ) {
+            my $use_queue = $plugin->get_config_value('use_queue');
+            if ( $use_queue ) {
+                require MT::TheSchwartz;
+                require TheSchwartz::Job;
+                my $job = TheSchwartz::Job->new();
+                $job->funcname('CommentSubscribe::EmailWorker');
+                $job->uniqkey( $obj->id );
+                my $priority = 5;
+                $job->priority( $priority );
+                $job->coalesce( ( $obj->blog_id || 0 ) .':'.$$.':'.$priority.':'.( time - ( time % 10 ) ) );
+                $job->arg( $app->base . $app->uri );
+                MT::TheSchwartz->insert($job);
+            } else {
+                send_notifications( $obj );
+            }
         }
-
-    } # end if ( $obj->visible && $obj->is_not_junk ) 
+    }
 }
 
 sub unsub {

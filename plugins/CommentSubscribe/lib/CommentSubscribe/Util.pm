@@ -8,7 +8,7 @@ use base 'Exporter';
 our @EXPORT_OK = qw( send_notifications );
 
 sub send_notifications {
-    my ($obj,$base) = @_;
+    my ($obj) = @_;
     
     my $app = MT::App::Comments->instance;
     my $cfg = MT::ConfigMgr->instance;
