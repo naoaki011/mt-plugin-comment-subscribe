@@ -15,7 +15,8 @@ sub send_notifications {
     my $script_path = $app->base . $cfg->CGIPath . $cfg->CommentScript;
 
     my $plugin   = MT->component('CommentSubscribe');
-    my $blog_id  = $obj->blog_id;
+    my $blog_id  = $obj->blog_id
+      or return;
     my $entry_id = $obj->entry_id;
     my $email    = $obj->email;
 
