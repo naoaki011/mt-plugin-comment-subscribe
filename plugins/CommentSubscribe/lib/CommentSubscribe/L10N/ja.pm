@@ -24,6 +24,8 @@ use vars qw( %Lexicon );
       => 'コメント通知メールの送信元アドレスとして指定します。 空白の場合は、コメント先記事の投稿者のメールアドレスが利用されます。',
     'The subject of the email that will be sent.<br>%BLOG% = Blog Name<br>%COMMENTER% = Commenter Name<br>%TITLE% = Blog post title'
       => '送信されるメール件名を設定します。<br>%BLOG% = ブログ名<br>%COMMENTER% = コメント投稿者名<br>%TITLE% = 記事タイトル',
+    'Remove subscription' => '購読の削除',
+    'Remove subscribe at Comment set to junk.' => 'コメントがスパム指定された時に、そのユーザの登録を解除します。',
 );
 
 1;

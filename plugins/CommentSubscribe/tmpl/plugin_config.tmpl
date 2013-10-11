@@ -15,3 +15,8 @@
     <input type="text" name="subject_header" value="<mt:var name="subject_header" escape="html">" />
   <p class="hint"><__trans phrase='The subject of the email that will be sent.<br>%BLOG% = Blog Name<br>%COMMENTER% = Commenter Name<br>%TITLE% = Blog post title'></p>
 </mtapp:setting>
+<mtapp:setting
+  id="remove_junk"
+  label="<__trans phrase="Remove subscription">">
+    <label for="remove_junk"><input type="checkbox" name="remove_junk"<mt:if name="remove_junk"> checked="checked"</mt:if> value="1" />&nbsp;<__trans phrase="Remove subscribe at Comment set to junk."></label>
+</mtapp:setting>

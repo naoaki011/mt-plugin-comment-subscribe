@@ -64,6 +64,23 @@ sub process_new_comment {
             }
         }
     }
+    else {
+        if ( $plugin->get_config_value('remove_junk') ) {
+            my $blog_id  = $obj->blog_id;
+            my $entry_id = $obj->entry_id;
+            my $email    = $obj->email;
+            if ( $email ) {
+                my $subscription = MT->model('commentsubscriptions')->load(
+                    {
+                        'blog_id'  => $blog_id,
+                        'entry_id' => $entry_id,
+                        'email'    => $email
+                    }
+                );
+                $subscription->remove if $subscription;
+            }
+        }
+    }
 }
 
 sub unsub {

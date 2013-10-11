@@ -28,6 +28,9 @@ settings:
   subject_header:
     default: '(%BLOG%) %COMMENTER% posted a new comment on "%TITLE%"'
     scope: system
+  remove_junk:
+    default: 0
+    scope: system
 task_workers:
   commentsub_email_worker:
     label: "Send email notifications for new comments."
