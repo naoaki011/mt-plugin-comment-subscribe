@@ -67,6 +67,7 @@ Subscribers" will be listing among your "Email Templates." Edit that template.
 The template supports a number of different variables that you can use inside 
 the template to customize the text of the email. They are:
 
+   * `entry_id`
    * `entry_title`
    * `entry_permalink`
    * `entry_author`

@@ -9,7 +9,7 @@ our @EXPORT_OK = qw( send_notifications );
 
 sub send_notifications {
     my ($obj) = @_;
-    
+
     my $app = MT::App::Comments->instance;
     my $cfg = MT::ConfigMgr->instance;
     my $script_path = $app->base . $cfg->CGIPath . $cfg->CommentScript;
@@ -57,6 +57,7 @@ sub send_notifications {
         # Here we build the email from a template rather than raw text. 
         # More powerful, easier to edit, L10N
         my $param = {
+            entry_id           => $entry_id,
             entry_title        => $entry->title,
             entry_author       => $entry->author->name,
             entry_author_email => $entry->author->email,

@@ -15,8 +15,7 @@ sub process_new_comment {
 
     if ( $obj->is_not_junk ) {
 
-        my $app = MT->instance()
-          ;    # Store the instance in a variable, we need it more often
+        my $app = MT->instance();    # Store the instance in a variable, we need it more often
 
         my $blog_id  = $obj->blog_id;
         my $entry_id = $obj->entry_id;
@@ -49,16 +48,28 @@ sub process_new_comment {
         if ( $obj->visible ) {
             my $use_queue = $plugin->get_config_value('use_queue');
             if ( $use_queue ) {
-                require MT::TheSchwartz;
-                require TheSchwartz::Job;
-                my $job = TheSchwartz::Job->new();
-                $job->funcname('CommentSubscribe::EmailWorker');
-                $job->uniqkey( $obj->id );
-                my $priority = 5;
-                $job->priority( $priority );
-                $job->coalesce( ( $obj->blog_id || 0 ) .':'.$$.':'.$priority.':'.( time - ( time % 10 ) ) );
-                $job->arg( $app->base . $app->uri );
-                MT::TheSchwartz->insert($job);
+                eval {
+                    require MT::TheSchwartz;
+                    require TheSchwartz::Job;
+                    my $job = TheSchwartz::Job->new();
+                    $job->funcname('CommentSubscribe::EmailWorker');
+                    $job->uniqkey( $obj->id );
+                    my $priority = 5;
+                    $job->priority( $priority );
+                    $job->coalesce( ( $obj->blog_id || 0 ) .':'.$$.':'.$priority.':'.( time - ( time % 10 ) ) );
+                    $job->arg( $app->base . $app->uri );
+                    MT::TheSchwartz->insert($job) or die 'Error inserting job into TheSchwartz queue';
+                };
+                if ($@) {
+                    MT->log(
+                        {
+                            blog_id => $blog_id,
+                            message => "Error adding job to the publish queue: $@",
+                            level   => MT::Log::ERROR(),
+                        }
+                    );
+                    send_notifications( $obj );
+                }
             } else {
                 send_notifications( $obj );
             }
